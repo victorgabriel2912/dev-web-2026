@@ -1,6 +1,6 @@
 /* ── CONFIGURAÇÃO ── edite só estas duas linhas ── */
 const WHATSAPP = "5561986781049";
-const EMAIL    = "victor.madeiros2912@email.com";
+const EMAIL    = "victor.madeiros2912@gmail.com";
 
 
 /* ── VALIDAÇÃO ── */
@@ -85,10 +85,63 @@ document.getElementById('btn-email').addEventListener('click', function() {
 });
 
 
+/* ── VALIDAÇÃO EM TEMPO REAL (LIMPA ERRO AO DIGITAR) ── */
+[
+  ['campo-nome', 'erro-nome'],
+  ['campo-email', 'erro-email'],
+  ['campo-assunto', 'erro-assunto'],
+  ['campo-mensagem', 'erro-mensagem']
+].forEach(function(par) {
+  var campo = document.getElementById(par[0]);
+  var erro  = document.getElementById(par[1]);
+  campo.addEventListener('input', function() {
+    campo.classList.remove('campo-invalido');
+    erro.classList.add('d-none');
+  });
+});
+
+
+/* ── VALIDAÇÃO NO SUBMIT DO FORMULÁRIO ── */
+document.getElementById('form-contato').addEventListener('submit', function(e) {
+  e.preventDefault();
+  validar();
+});
+
+
 /* ── FECHAR MENU MOBILE AO CLICAR NUM LINK ── */
 document.querySelectorAll('#menu .nav-link').forEach(function(link) {
   link.addEventListener('click', function() {
     var instancia = bootstrap.Collapse.getInstance(document.getElementById('menu'));
     if (instancia) instancia.hide();
   });
+});
+
+
+/* ── ALTERNADOR DE TEMA CLARO/ESCURO ── */
+var botaoTema = document.getElementById('botao-tema');
+var iconeTema = document.getElementById('icone-tema');
+
+function aplicarTema(tema) {
+  var temaClaro = tema === 'claro';
+
+  if (temaClaro) {
+    document.documentElement.setAttribute('data-tema', 'claro');
+  } else {
+    document.documentElement.removeAttribute('data-tema');
+  }
+
+  iconeTema.className = temaClaro ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
+  botaoTema.setAttribute('aria-label', temaClaro ? 'Ativar tema escuro' : 'Ativar tema claro');
+  botaoTema.setAttribute('title', temaClaro ? 'Ativar tema escuro' : 'Ativar tema claro');
+}
+
+var temaSalvo = localStorage.getItem('tema-portfolio') || 'escuro';
+aplicarTema(temaSalvo);
+
+botaoTema.addEventListener('click', function() {
+  var temaAtual = document.documentElement.getAttribute('data-tema') === 'claro' ? 'claro' : 'escuro';
+  var novoTema = temaAtual === 'claro' ? 'escuro' : 'claro';
+
+  aplicarTema(novoTema);
+  localStorage.setItem('tema-portfolio', novoTema);
 });
